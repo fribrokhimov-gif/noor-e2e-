@@ -1,0 +1,20 @@
+{
+  "name": "noor-merchant-e2e",
+  "version": "1.0.0",
+  "private": true,
+  "description": "End-to-end UI tests for the Noor merchant panel (Delivery) — Playwright + TypeScript",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:auth": "playwright test tests/login.spec.ts tests/logout.spec.ts tests/forgot-password.spec.ts",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "@types/node": "^22.0.0",
+    "dotenv": "^16.4.5",
+    "typescript": "^5.6.0"
+  }
+}
