@@ -4,12 +4,16 @@
   "private": true,
   "description": "End-to-end UI tests for the Noor merchant panel (Delivery) — Playwright + TypeScript",
   "type": "module",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "test": "playwright test",
     "test:headed": "playwright test --headed",
     "test:auth": "playwright test tests/login.spec.ts tests/logout.spec.ts tests/forgot-password.spec.ts",
-    "report": "playwright show-report"
+    "report": "playwright show-report",
+    "test:slow": "playwright test --headed --workers=1",
+    "test:ui": "playwright test --ui"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",

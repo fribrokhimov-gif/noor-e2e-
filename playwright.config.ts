@@ -20,6 +20,8 @@ export default defineConfig({
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
+    // SLOWMO=800 npm run test:slow  → watch each click/type step (milliseconds per action)
+    launchOptions: { slowMo: Number(process.env.SLOWMO ?? 0) },
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
 });
