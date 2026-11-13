@@ -16,6 +16,9 @@ export const env = {
 
 export const hasMerchantCreds = Boolean(env.merchant.phone && env.merchant.password);
 export const hasResetOtp = Boolean(env.resetOtp);
+/** Creating an address through the UI needs the live Yandex geocoder; opt in with RUN_GEOCODER=1. */
+export const runGeocoderTests = Boolean(process.env.RUN_GEOCODER);
+export const addressQuery = process.env.ADDRESS_QUERY ?? 'Ташкент, Амир Темур';
 
 /** Backend auth endpoints, asserted in tests to verify the UI hits the right contract. */
 export const api = {

@@ -57,4 +57,58 @@ export class MerchantApi {
       headers: { Authorization: `Bearer ${token}` },
     });
   }
+
+  /** Safety-net cleanup for the UI tests: remove an employee by phone if it still exists. */
+  async deleteEmployeeByPhone(phone: string): Promise<void> {
+    const token = await this.adminToken();
+    const res = await this.ctx.get(`${env.employeesApiURL}/merchant-employees`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok()) return;
+    const list: Array<{ employee_id: string; phone: string }> = (await res.json()).list ?? [];
+    const match = list.find((e) => e.phone === phone);
+    if (match) await this.deleteAccount(match.employee_id);
+  }
+
+  /** A fresh virtual +99800XXXXXXX test number (no real SMS). */
+  static virtualPhone(): string {
+    return `+99800${String(Math.floor(Math.random() * 1e7)).padStart(7, '0')}`;
+  }
+
+  // ---- Addresses (branches) — used to seed the list for the UI delete test ----
+
+  async createAddress(name: string): Promise<{ id: number; name: string }> {
+    const token = await this.adminToken();
+    const res = await this.ctx.post(`${env.coreApiURL}/api/v1/vendors/locations`, {
+      headers: { Authorization: `Bearer ${token}` },
+      data: {
+        location: { lat: 41.311, long: 69.279 },
+        address: { ru: 'QA addr', en: 'QA addr', uz: 'QA addr' },
+        name, shop_id: null, external_id: null, floor: 3, apartment: null, entrance: null,
+        door_phone: null, comment: 'QA e2e', client_phone: '+998901234567', client_name: null, is_business: true,
+      },
+    });
+    if (!res.ok()) throw new Error(`Create address failed: ${res.status()} ${await res.text()}`);
+    return { id: (await res.json()).id, name };
+  }
+
+  async deleteAddressById(id: number): Promise<void> {
+    const token = await this.adminToken();
+    await this.ctx.delete(`${env.coreApiURL}/api/v1/vendors/locations/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  }
+
+  /** Safety-net cleanup: remove an address by name if it still exists. */
+  async deleteAddressByName(name: string): Promise<void> {
+    const token = await this.adminToken();
+    const res = await this.ctx.get(`${env.coreApiURL}/api/v1/vendors/locations`, {
+      headers: { Authorization: `Bearer ${token}` },
+      params: { is_business: 'true' },
+    });
+    if (!res.ok()) return;
+    const list: Array<{ id: number; name: string }> = (await res.json()) ?? [];
+    const match = (Array.isArray(list) ? list : []).find((a) => a.name === name);
+    if (match) await this.deleteAddressById(match.id);
+  }
 }

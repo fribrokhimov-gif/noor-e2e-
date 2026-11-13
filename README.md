@@ -26,3 +26,18 @@ The forgot-password spec needs `RESET_OTP` (the test env's fixed OTP for the vir
 ## CI
 `.github/workflows/e2e.yml` runs on push/PR. Set repo secrets `MERCHANT_PHONE`,
 `MERCHANT_PASSWORD`, `RESET_OTP`. The HTML report is uploaded as an artifact.
+
+## Coverage
+- **Auth** — `tests/login.spec.ts`, `tests/logout.spec.ts`, `tests/forgot-password.spec.ts`
+- **Employees (Staff)** — `tests/employees.spec.ts`: add manager → list → delete; add cashier; reject no-phone
+- **Addresses (Branches)** — `tests/branches.spec.ts`: an API-seeded address shows in the list and
+  is deleted through the UI. Creating an address drives the **Yandex geocoder**, so that test is
+  opt-in: run with `RUN_GEOCODER=1` (and optionally `ADDRESS_QUERY="..."`).
+
+## Running on macOS (watch it)
+```bash
+npm ci && npx playwright install chromium
+cp .env.example .env     # set MERCHANT_PHONE, MERCHANT_PASSWORD, RESET_OTP=804575
+SLOWMO=800 npm run test:slow    # headed, one worker, slowed down
+npm run test:ui                 # interactive runner (time-travel, pick tests)
+```
