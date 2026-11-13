@@ -4,6 +4,9 @@ import { ResetPasswordPage } from '../pages/reset-password.page.js';
 import { AppShell } from '../pages/app-shell.page.js';
 import { StaffPage } from '../pages/staff.page.js';
 import { BranchesPage } from '../pages/branches.page.js';
+import { PricingPage } from '../pages/pricing.page.js';
+import { ClientsPage } from '../pages/clients.page.js';
+import { ReviewsPage } from '../pages/reviews.page.js';
 import { MerchantApi, type DisposableAccount } from '../api/merchant-api.js';
 
 type Fixtures = {
@@ -12,6 +15,9 @@ type Fixtures = {
   appShell: AppShell;
   staffPage: StaffPage;
   branchesPage: BranchesPage;
+  pricingPage: PricingPage;
+  clientsPage: ClientsPage;
+  reviewsPage: ReviewsPage;
   merchantApi: MerchantApi;
   /** A disposable employee account, provisioned before the test and removed after. */
   disposableAccount: DisposableAccount;
@@ -32,6 +38,15 @@ export const test = base.extend<Fixtures>({
   },
   branchesPage: async ({ page }, use) => {
     await use(new BranchesPage(page));
+  },
+  pricingPage: async ({ page }, use) => {
+    await use(new PricingPage(page));
+  },
+  clientsPage: async ({ page }, use) => {
+    await use(new ClientsPage(page));
+  },
+  reviewsPage: async ({ page }, use) => {
+    await use(new ReviewsPage(page));
   },
   merchantApi: async ({}, use) => {
     const api = await MerchantApi.create();
